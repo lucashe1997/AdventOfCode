@@ -1,36 +1,43 @@
 const fs = require('fs');
 
 function part1() {
-  const input = fs.readFileSync('./day3/input.txt', 'utf8');
-  const charList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const input = fs.readFileSync('./input.txt', 'utf8');
+  const charList = {};
+
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    .split('')
+    .forEach((c,i) => charList[c] = i + 1);
+
   const rucksacks = input.split('\n');
 
-  const sameItems = [];
-  rucksacks.map(rucksack => {
-    const compartments = [
-      rucksack.slice(0, rucksack.length / 2),
-      rucksack.slice(rucksack.length / 2)
-    ];
-
+  let sum = 0;
+  rucksacks.forEach(rucksack => {
+    const middle = rucksack.length / 2;
     let item = null;
-    compartments[0].split('').some((char) => {
-      if (compartments[1].indexOf(char) > -1) {
-        item = charList.indexOf(char) + 1;
-        return true;
+    for (let cI = 0; cI < middle; cI++) {
+      const char = rucksack[cI];
+      if (rucksack.substring(middle).indexOf(char) > -1) {
+        item = charList[char];
+        break;
       }
-    });
-    if (item) sameItems.push(item);
+    }
+    if (item) sum += item;
   })
 
-  return sameItems.reduce((t, i) => t + i, 0);
+  return sum;
 };
 
 function part2() {
-  const input = fs.readFileSync('./day3/input.txt', 'utf8');
-  const charList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const input = fs.readFileSync('./input.txt', 'utf8');
+  const charList = {};
+
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    .split('')
+    .forEach((c,i) => charList[c] = i + 1);
+
   const rucksacks = input.split('\n');
   const groups = [];
-  const sameItems = [];
+  let sum = 0;
 
   for (let i = 0; i < rucksacks.length; i += 3) {
     groups.push(rucksacks.slice(i,i+3));
@@ -40,15 +47,15 @@ function part2() {
     let item = null;
     rucksack[0].split('').some(char => {
       if (rucksack[1].indexOf(char) > -1 && rucksack[2].indexOf(char) > -1) {
-        item = charList.indexOf(char) + 1;
+        item = charList[char] + 1;
         return true;
       }
     })
 
-    if (item) sameItems.push(item);
+    if (item) sum += item;
   })
 
-  return sameItems.reduce((t, i) => t + i, 0);
+  return sum;
 };
 
 console.log("Part 1: ", part1());
